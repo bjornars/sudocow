@@ -22,9 +22,9 @@ class Number:
 
     def group(self, i):
         if i == 'row':
-            return self.x
-        if i == 'col':
             return self.y
+        if i == 'col':
+            return self.x
         if i == 'box':
             gx = self.x / self.board.ny
             gy = self.y / self.board.nx
