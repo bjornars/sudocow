@@ -1,3 +1,4 @@
+GROUPS = ['row', 'col', 'box']
 methods = []
 
 def solve_mtd(mth):
@@ -88,4 +89,29 @@ class Solver:
                             pairs.append(num.candidates[:])
 
         return False
+    
+    @solve_mtd
+    def locked_candidates_2(self):
+    # TODO: locked candidates_1
+        for grp in 'row', 'col':
+            group = self.b.groups[grp]
+            for nr, line in group.iteritems():
+
+                # for each row or coloumn, check if all candiates for a guess are 
+                # contained within a single box. if so, remove the candidate from other lines within the box
+                for guess in range(self.b.dim):
+                    boxes = [item.group('box') for item in line if guess in item.candidates]
+                    if len( set(boxes) ) == 1: 
+                        # all candidates for this number in this line is in the same box
+                        box = self.b.groups['box'][boxes[0]]
+
+                        # check if there are candidates in the box outside the line
+                        cands_in_box = set(item for item in  box if guess in item.candidates)
+                        cands_in_line = set(item for item in line if guess in item.candidates) 
+                        if cands_in_box > cands_in_line:
+                            for item in cands_in_box - cands_in_line:
+                                self.remove(item, guess, 'locked candidates 2')
+                            return True
+
+                    
 
