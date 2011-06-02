@@ -1,4 +1,5 @@
 from Board import Board
+from Solver import Solver
 
 def read_board(filename):
     with open(filename) as f:
@@ -27,20 +28,12 @@ def read_board(filename):
         return board
 
 b = read_board('boards/test1.ss')
+
 b.display()
-print b.numbers[0][0].options
-print b.numbers[1][0].options
-print b.numbers[2][0].options
-print b.numbers[3][0].options
-print b.numbers[4][0].options
-print b.numbers[5][0].options
-print b.numbers[6][0].options
-print b.numbers[7][0].options
-print b.numbers[8][0].options
 
-b.solve()
+solver = Solver(b)
+solver.solve()
 
-
-# b.display()
+b.display()
 
 

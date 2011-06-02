@@ -16,7 +16,7 @@ class Number:
     
     def __str__(self):
         if self.v >= 0:
-            return str(self.v)
+            return str(self.v + 1)
         
         return '.'
 
@@ -58,22 +58,24 @@ class Board:
         
         # create empty number matrix
         self.numbers = [ [None for x in range(self.dim)] for y in range(self.dim)]
-        self.open = []
+        self.todo = []
 
         for x in range(self.dim):
             for y in range(self.dim):
                 num = Number(self, x, y)
                 self.numbers[x][y] = num
-                self.open.append(num)
+                self.todo.append(num)
 
                 # assign to groups
                 for z in GROUPS:
                     self.groups[z][num.group(z)].append(num)
 
     def set(self, x, y, v):
-        num = self.numbers[x][y]
+        self.setNum(self.numbers[x][y], v)
+
+    def setNum(self, num, v):
         num.set(v)
-        self.open.remove(num)
+        self.todo.remove(num)
 
         # remove options from group-mates
         for grp in GROUPS:
