@@ -1,4 +1,3 @@
-GROUPS = ['row', 'col', 'box']
 methods = []
 
 def solve_mtd(mth):
@@ -11,7 +10,7 @@ class Solver:
     RESET = '\033[00m'
     def __init__(self, board):
         self.b = board
-    
+
     def solve(self):
         todo = self.b.todo
         while self.b.todo:
@@ -45,7 +44,7 @@ class Solver:
                 return True
 
         return False
- 
+
     @solve_mtd
     def hidden_singles(self):
         for grp in self.b.groups.values():
@@ -64,7 +63,7 @@ class Solver:
                         return True
 
         return False
-    
+
     @solve_mtd
     def pairs(self):
         def clear_pairs(pair, line):
@@ -74,11 +73,11 @@ class Solver:
                     removed |= self.remove(num, pair[0], 'naked pair')
                     removed |= self.remove(num, pair[1], 'naked pair')
             return removed
-            
+
         for grp in self.b.groups.values():
             for line in grp.values():
                 # for each 'line' in a group, check if a pair of candidate is unique.
-                # if so, remove candiates from all other items in line
+                # if so, remove candiates from all other cell in line
                 pairs = []
                 for num in line:
                     if len(num.candidates) == 2:
@@ -89,7 +88,7 @@ class Solver:
                             pairs.append(num.candidates[:])
 
         return False
-    
+
     @solve_mtd
     def locked_candidates_2(self):
     # TODO: locked candidates_1
@@ -97,20 +96,20 @@ class Solver:
             group = self.b.groups[grp]
             for nr, line in group.iteritems():
 
-                # for each row or coloumn, check if all candiates for a guess are 
+                # for each row or coloumn, check if all candiates for a guess are
                 # contained within a single box. if so, remove the candidate from other lines within the box
                 for guess in range(self.b.dim):
-                    boxes = [item.group('box') for item in line if guess in item.candidates]
-                    if len( set(boxes) ) == 1: 
+                    boxes = [cell.group('box') for cell in line if guess in cell.candidates]
+                    if len( set(boxes) ) == 1:
                         # all candidates for this number in this line is in the same box
                         box = self.b.groups['box'][boxes[0]]
 
                         # check if there are candidates in the box outside the line
-                        cands_in_box = set(item for item in  box if guess in item.candidates)
-                        cands_in_line = set(item for item in line if guess in item.candidates) 
+                        cands_in_box = set(cell for cell in  box if guess in cell.candidates)
+                        cands_in_line = set(cell for cell in line if guess in cell.candidates)
                         if cands_in_box > cands_in_line:
-                            for item in cands_in_box - cands_in_line:
-                                self.remove(item, guess, 'locked candidates 2')
+                            for cell in cands_in_box - cands_in_line:
+                                self.remove(cell, guess, 'locked candidates 2')
                             return True
 
                     

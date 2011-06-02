@@ -1,9 +1,9 @@
-GROUPS = ['row', 'col', 'box']
 
 class SudokuError(Exception):
     pass
 
 class Number:
+    GROUPS = ['row', 'col', 'box']
     def __init__(self, board, x, y):
         self.board = board
         self.x = x
@@ -12,12 +12,12 @@ class Number:
         self.candidates = list(range(self.board.dim))
 
     def groups(self):
-        return "(%2s, %2s, %2s)" % tuple( [ self.group(x) for x in ['row', 'col', 'box']])
-    
+        return "(%2s, %2s, %2s)" % tuple( [ self.group(x) for x in self.GROUPS])
+
     def __str__(self):
         if self.v >= 0:
             return str(self.v + 1)
-        
+
         return '.'
 
     def group(self, i):
@@ -37,7 +37,7 @@ class Number:
         self.v = v
 
         # remove candidates from self
-        self.candidates = [] 
+        self.candidates = []
 
     def removeCand(self, v):
         if v in self.candidates:
@@ -58,7 +58,7 @@ class Board:
             self.groups[grp] = {}
             for x in range(self.dim):
                 self.groups[grp][x] = []
-        
+
         # create empty number matrix
         self.numbers = [ [None for x in range(self.dim)] for y in range(self.dim)]
         self.todo = []
@@ -88,20 +88,20 @@ class Board:
                 n.removeCand(v)
 
         return True
-    
+
     def removeCand(self, num, v):
         return num.removeCand(v)
-    
+
     def display(self):
         BIG = False
-        
+
         def make_div(ends, space, nx, ny):
             s = ends
             for j in range(ny):
                 for i in range(nx):
                     s += space
-                    if BIG: s += ends 
-                s += ends 
+                    if BIG: s += ends
+                s += ends
             s = s[:-1]
             return s
 
@@ -114,10 +114,10 @@ class Board:
         divider3 = make_div('|', '%s', self.nx, self.ny)
         if BIG: divider3 = make_div('|', '%2s ', self.nx, self.ny)
         if BIG: print divider
-              
+
         for y in range(self.dim):
             if y % self.ny == 0:
-                print divider 
+                print divider
             if BIG: print divider2
             print divider3 % tuple([self.numbers[x][y] for x in range(self.dim)])
             if BIG: print divider2
