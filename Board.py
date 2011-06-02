@@ -3,7 +3,6 @@ class SudokuError(Exception):
     pass
 
 class Number:
-    GROUPS = ['row', 'col', 'box']
     def __init__(self, board, x, y):
         self.board = board
         self.x = x
@@ -12,7 +11,7 @@ class Number:
         self.candidates = list(range(self.board.dim))
 
     def groups(self):
-        return "(%2s, %2s, %2s)" % tuple( [ self.group(x) for x in self.GROUPS])
+        return "(%2s, %2s, %2s)" % tuple( [ self.group(x) for x in self.board.GROUPS])
 
     def __str__(self):
         if self.v >= 0:
@@ -47,6 +46,7 @@ class Number:
             return False
 
 class Board:
+    GROUPS = ['row', 'col', 'box']
     def __init__(self, nx, ny):
         self.nx = nx
         self.ny = ny
@@ -54,7 +54,7 @@ class Board:
 
         # create empty groups
         self.groups = {}
-        for grp in GROUPS:
+        for grp in self.GROUPS:
             self.groups[grp] = {}
             for x in range(self.dim):
                 self.groups[grp][x] = []
@@ -70,7 +70,7 @@ class Board:
                 self.todo.append(num)
 
                 # assign to groups
-                for z in GROUPS:
+                for z in self.GROUPS:
                     self.groups[z][num.group(z)].append(num)
 
     def set(self, x, y, v):
@@ -83,7 +83,7 @@ class Board:
         self.todo.remove(num)
 
         # remove candidates from group-mates
-        for grp in GROUPS:
+        for grp in self.GROUPS:
             for n in self.groups[grp][num.group(grp)]:
                 n.removeCand(v)
 
