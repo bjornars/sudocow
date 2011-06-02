@@ -9,7 +9,7 @@ class Number:
         self.x = x
         self.y = y
         self.v = -1
-        self.options = list(range(self.board.dim))
+        self.candidates = list(range(self.board.dim))
 
     def groups(self):
         return "(%2s, %2s, %2s)" % tuple( [ self.group(x) for x in ['row', 'col', 'box']])
@@ -36,12 +36,15 @@ class Number:
 
         self.v = v
 
-        # remove options from self
-        self.options = [] 
+        # remove candidates from self
+        self.candidates = [] 
 
-    def removeOpt(self, v):
-        if v in self.options:
-            self.options.remove(v)
+    def removeCand(self, v):
+        if v in self.candidates:
+            self.candidates.remove(v)
+            return True
+        else:
+            return False
 
 class Board:
     def __init__(self, nx, ny):
@@ -74,13 +77,20 @@ class Board:
         self.setNum(self.numbers[x][y], v)
 
     def setNum(self, num, v):
+        if num.v != -1: raise SudokuError
+
         num.set(v)
         self.todo.remove(num)
 
-        # remove options from group-mates
+        # remove candidates from group-mates
         for grp in GROUPS:
             for n in self.groups[grp][num.group(grp)]:
-                n.removeOpt(v)
+                n.removeCand(v)
+
+        return True
+    
+    def removeCand(self, num, v):
+        return num.removeCand(v)
     
     def display(self):
         BIG = False

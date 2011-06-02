@@ -35,5 +35,3 @@ solver = Solver(b)
 solver.solve()
 
 b.display()
-
-
