@@ -2,7 +2,34 @@
 class SudokuError(Exception):
     pass
 
-class Number:
+class Group:
+    def __init__(self, board, grp):
+        self.grp = grp
+        self.board = board
+        self.lines = [Line(self,nr) for nr in range(self.board.dim)]
+    
+    def __iter__(self):
+        return self.lines.__iter__()
+
+    def __getitem__(self, index):
+        return self.lines[index]
+
+class Line:
+    def __init__(self, group, nr):
+        self.group = group
+        self.nr = nr
+        self.cells = []
+
+    def __str__(self):
+        return "%s%d" % (self.group.grp, self.nr)
+
+    def append(self, cell):
+        self.cells.append(cell)
+
+    def __iter__(self):
+        return self.cells.__iter__()
+
+class Cell:
     def __init__(self, board, x, y):
         self.board = board
         self.x = x
@@ -54,10 +81,8 @@ class Board:
 
         # create empty groups
         self.groups = {}
-        for grp in self.GROUPS:
-            self.groups[grp] = {}
-            for x in range(self.dim):
-                self.groups[grp][x] = []
+        for group in self.GROUPS:
+            self.groups[group] = Group(self, group)
 
         # create empty number matrix
         self.numbers = [ [None for x in range(self.dim)] for y in range(self.dim)]
@@ -65,7 +90,7 @@ class Board:
 
         for x in range(self.dim):
             for y in range(self.dim):
-                num = Number(self, x, y)
+                num = Cell(self, x, y)
                 self.numbers[x][y] = num
                 self.todo.append(num)
 

@@ -45,10 +45,9 @@ def singles(s):
 
 @solve_mtd
 def hidden_singles(s):
-    for grp in s.b.groups.values():
-        for line in grp.values():
+    for group in s.b.groups.values():
+        for line in group:
             # for each 'line' in a group, check if a candidate is unique, if so take it
-
             for guess in range(s.b.dim):
                 n = 0
                 cand = None
@@ -70,8 +69,8 @@ def pairs(s):
                 removed |= s.remove(num, pair[1], 'naked pair')
         return removed
 
-    for grp in s.b.groups.values():
-        for line in grp.values():
+    for group in s.b.groups.values():
+        for line in group:
             # for each 'line' in a group, check if a pair of candidate is unique.
             # if so, remove candiates from all other cell in line
             pairs = []
@@ -88,8 +87,7 @@ def locked_candidates_2(s):
 # TODO: locked candidates_1
     for grp in 'row', 'col':
         group = s.b.groups[grp]
-        for nr, line in group.iteritems():
-
+        for line in group:
             # for each row or coloumn, check if all candiates for a guess are
             # contained within a single box. if so, remove the candidate from other lines within the box
             for guess in range(s.b.dim):
@@ -115,8 +113,8 @@ def naked_quads(s):
     naked_tuples(s, 4)
 
 def naked_tuples(s, n):
-    for g, group in s.b.groups.iteritems():
-        for nr, line in group.iteritems():
+    for group in s.b.groups.values():
+        for line in group:
             # for each 'line' in a group, check if an ntuple of candidates is contained within three cells.
             # if so, remove candiates from all other cell in line
             tups = []
